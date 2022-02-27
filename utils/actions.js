@@ -2,22 +2,17 @@ const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const db = require('../db/connection')
 const cTable = require('console.table');
-
 const chalklet = require('chalklet');
 //styling for chalklet
 const { colorOptions, fontOptions, colorOptions2 } = require('./consoleStyle');
-
-let roles = [];
-let departments = [];
-let employees = [];
-
 
 
 // Arrays of questions for inquirer
 const {
     startQuestions,
     addDeptQuestion,
-    bootUpQ
+    bootUpQ,
+    addRoleQuestions
 } = require('../lib/arrayPrompts');
 
 // ** -------------------------------------------------- Queries -------------------------------------------------- ** //
@@ -47,7 +42,7 @@ function startMenu() {
 
 // view all departments
 function viewDepartments() {
-    const sql = `SELECT * FROM department`;
+    var sql = `SELECT * FROM department`;
     db.query(sql, (err, results) => {
         if (err) {
             throw (err);
@@ -71,7 +66,7 @@ function viewDepartments() {
 
 // view all roles
 function viewRoles() {
-    const sql = `SELECT * FROM role`;
+    var sql = `SELECT * FROM role`;
     db.query(sql, (err, results) => {
         if (err) {
             throw (err);
@@ -96,7 +91,7 @@ function viewRoles() {
 
 // view all employees
 function viewEmployees() {
-    const sql = `SELECT * FROM employee`;
+    var sql = `SELECT * FROM employee`;
     db.query(sql, (err, results) => {
         if (err) {
             throw (err);
@@ -123,19 +118,12 @@ function viewEmployees() {
 function addDepartments() {
     inquirer.prompt(addDeptQuestion).then(response => {
         const newDepartment = response.addDepartment
-        const sql = `INSERT INTO department (name) VALUES ("${newDepartment}");`;
+        var sql = `INSERT INTO department (name) VALUES ("${newDepartment}");`;
 
         db.query(sql, (err, data) => {
             if (err) {
                 throw (err);
             }
-            for (let i = 0; i < data.length; i++) {
-                var departmentName = data[i].title
-                var departmentId = data[i].id
-                var department = { 'department': { depName: departmentName, depId: departmentId } };
-                departments.push(department);
-            }
-            console.log(departments)
             viewDepartments();
 
 
@@ -146,28 +134,25 @@ function addDepartments() {
 
 // add a Role
 function addRole() {
+        inquirer.prompt(addRoleQuestions).then(response => {
+            const newRole = response.addRole;
+            const salary = response.salary;
+            const depId = response.depId;
+            var sql = `INSERT INTO role (title, salary, department_id) VALUES ("${newRole}", "${salary}", "${depId}");`;
+            db.query(sql, (err, results) => {
+                if (err) {
+                    throw (err);
+                }
+                console.table(results);
+                viewRoles();
 
-    inquirer.prompt(addRoleQuestions).then(response => {
-        const newRole = response.addRole;
-        const salary = response.salary;
-        const depId = response.depId;
-        const sql = `INSERT INTO role (name) VALUES ("${newRole}", "${salary}", "${depId}");`;
-        db.query(sql, (err, results) => {
-            if (err) {
-                throw (err);
-            }
-
-            viewRole();
-
+            })
         })
-
-    })
 
 }
 
 // add an employee
 function addEmployee() {
-    console.log(departments);
 }
 
 // update an employee role
@@ -175,7 +160,7 @@ function updateEmployee() {
 
 }
 
-
+//  the handler for main menu input;
 function app(switchValue) {
     switch (switchValue) {
         case 'startScreen':
@@ -219,7 +204,4 @@ module.exports = {
     addEmployee,
     updateEmployee,
     startMenu,
-    roles,
-    departments,
-    employees
 }
