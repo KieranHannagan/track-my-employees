@@ -12,7 +12,10 @@ const {
     startQuestions,
     addDeptQuestion,
     bootUpQ,
-    addRoleQuestions
+    addRoleQuestions,
+    addEmployeeQuestions,
+    updateEmployeeQuestionsFirst,
+    updateEmployeeQuestionsSecond
 } = require('../lib/arrayPrompts');
 
 // ** -------------------------------------------------- Queries -------------------------------------------------- ** //
@@ -28,10 +31,7 @@ function bootUp() {
     })
 }
 
-function quitApp() {
-    console.log(chalklet.generate('Good', colorOptions, fontOptions));
-    console.log(chalklet.generate('Bye', colorOptions2, fontOptions));
-}
+
 // Go to start screen 
 function startMenu() {
     inquirer.prompt(startQuestions)
@@ -134,31 +134,96 @@ function addDepartments() {
 
 // add a Role
 function addRole() {
-        inquirer.prompt(addRoleQuestions).then(response => {
-            const newRole = response.addRole;
-            const salary = response.salary;
-            const depId = response.depId;
-            var sql = `INSERT INTO role (title, salary, department_id) VALUES ("${newRole}", "${salary}", "${depId}");`;
-            db.query(sql, (err, results) => {
-                if (err) {
-                    throw (err);
-                }
-                console.table(results);
-                viewRoles();
+    inquirer.prompt(addRoleQuestions).then(response => {
+        const newRole = response.addRole;
+        const salary = response.salary;
+        const depId = response.depId;
+        var sql = `INSERT INTO role (title, salary, department_id) VALUES ("${newRole}", "${salary}", "${depId}");`;
+        db.query(sql, (err, results) => {
+            if (err) {
+                throw (err);
+            }
+            console.table(results);
+            viewRoles();
 
-            })
         })
+    })
 
 }
 
 // add an employee
 function addEmployee() {
-}
+    inquirer.prompt(addEmployeeQuestions).then(response => {
+        const firstName = response.empFirst;
+        const lastName = response.empLast;
+        const roleId = response.roleId;
+        var managerId = null;
+        if (response.confirmManager) {
+            managerId = response.managerId;
+        }
 
-// update an employee role
+        var sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES ("${firstName}", "${lastName}", "${roleId}", ${managerId});`;
+        db.query(sql, (err, results) => {
+            if (err) {
+                throw (err);
+            }
+            console.table(results);
+            viewEmployees();
+
+        })
+    })
+}
 function updateEmployee() {
+    inquirer.prompt(updateEmployeeQuestionsSecond).then(response => {
+        var sql = `UPDATE employee SET role_id = ? 
+        WHERE id = ?`;
+
+        var params = [response.newRoleId, response.chooseEmpId]
+        db.query(sql, params, (err, results) => {
+            if (err) {
+                throw (err);
+            }
+            console.table(results);
+            viewEmployees();
+        })
+
+    })
 
 }
+// see an employee list for reference
+function confirmSeeEmp() {
+    inquirer.prompt(updateEmployeeQuestionsFirst).then(response => {
+        if (response.confirmSeeList) {
+            const sql = `SELECT * FROM employee`;
+
+            db.query(sql, (err, results) => {
+                console.log(
+                    `
+=======================================================================
+                            EMPLOYEES
+======================================================================= 
+                    `
+                )
+                console.table(results);
+                console.log(
+                    `
+=======================================================================
+                    `
+                )
+                console.log('What is the ID of the employee you would like to update?')
+            })
+            updateEmployee();
+        } else updateEmployee();
+    })
+
+}
+
+// If user wants to quit
+function quitApp() {
+    console.log(chalklet.generate('Good', colorOptions, fontOptions));
+    console.log(chalklet.generate('Bye', colorOptions2, fontOptions));
+}
+
 
 //  the handler for main menu input;
 function app(switchValue) {
@@ -166,28 +231,28 @@ function app(switchValue) {
         case 'startScreen':
             startMenu();
             break;
-        case 'view all departments':
+        case 'View all departments':
             viewDepartments()
             break;
-        case 'view all roles':
+        case 'View all roles':
             viewRoles();
             break;
-        case 'view all employees':
+        case 'View all employees':
             viewEmployees();
             break;
-        case 'add a department':
+        case 'Add a department':
             addDepartments();
             break;
-        case 'add a role':
+        case 'Add a role':
             addRole();
             break;
-        case 'add an employee':
+        case 'Add an employee':
             addEmployee();
             break;
-        case 'update an employee role':
-            updateEmployee();
+        case 'Update an employee role':
+            confirmSeeEmp();
             break;
-        case 'quit':
+        case 'Quit':
             quitApp();
             break;
 
@@ -203,5 +268,6 @@ module.exports = {
     addRole,
     addEmployee,
     updateEmployee,
+    confirmSeeEmp,
     startMenu,
 }

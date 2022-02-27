@@ -6,7 +6,8 @@ const { colorOptions, fontOptions, colorOptions2 } = require('./utils/consoleSty
 
 
 // helper functions for prompts
-const { bootUp }  = require('./utils/actions');
+const { bootUp }  = require('./utils/actions');;;
+
 
 
 db.connect(err => {
