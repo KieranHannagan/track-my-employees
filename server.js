@@ -6,7 +6,7 @@ const { json } = require("express");
 
 // Arrays of questions for inquirer
 const {
-    startScreen,
+    startQuestions,
 } = require('./lib/arrayPrompts');
 
 // helper functions for prompts
@@ -14,7 +14,7 @@ const {
     viewDepartments, viewRoles, 
     viewEmployees,addDepartments,
     addRole, addEmployee,
-    updateEmployee, startTracking } = require('./utils/actions');
+    updateEmployee, startMenu } = require('./utils/actions');
 
 
 db.connect(err => {
@@ -24,7 +24,7 @@ db.connect(err => {
 
 
 
-startTracking();
+  startMenu();
 
 
 // module.exports = app;

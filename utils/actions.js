@@ -5,18 +5,17 @@ const cTable = require('console.table');
 
 // Arrays of questions for inquirer
 const {
-    startScreen,
+    startQuestions,
 } = require('../lib/arrayPrompts');
 
 // ** -------------------------------------------------- Queries -------------------------------------------------- ** //
 
 // Go to start screen 
-function startTracking() {
-    console.log('1st')
-    inquirer.prompt(startScreen)
+function startMenu() {
+    inquirer.prompt(startQuestions)
         .then(response => {
-            console.log(response.startScreen);
-            app(response.startScreen);
+            console.log(response.startQuestion);
+            app(response.startQuestion);
         })
 };
 
@@ -40,7 +39,7 @@ function viewDepartments() {
 =======================================================================
             `
         )
-        startTracking();
+        startMenu();
     })
 }
 
@@ -64,7 +63,7 @@ function viewRoles() {
 =======================================================================
             `
         )
-        startTracking();
+        startMenu();
     })
 
 }
@@ -89,7 +88,7 @@ function viewEmployees() {
 =======================================================================
             `
         )
-        startTracking();
+        startMenu();
     })
 
 }
@@ -118,7 +117,7 @@ function updateEmployee() {
 function app(switchValue) {
     switch (switchValue) {
         case 'startScreen':
-            startTracking();
+            startMenu();
             break;
         case 'view all departments':
             viewDepartments()
@@ -152,5 +151,5 @@ module.exports = {
     addRole,
     addEmployee,
     updateEmployee,
-    startTracking
+    startMenu
 }
