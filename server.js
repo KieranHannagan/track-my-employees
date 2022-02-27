@@ -1,30 +1,25 @@
-const inquirer = require('inquirer');
 const mysql = require('mysql2');
 const db = require('./db/connection');
-const cTable = require('console.table');
-const { json } = require("express");
+const chalklet = require('chalklet');
+//styling for chalklet
+const { colorOptions, fontOptions, colorOptions2 } = require('./utils/consoleStyle');
 
-// Arrays of questions for inquirer
-const {
-    startQuestions,
-} = require('./lib/arrayPrompts');
 
 // helper functions for prompts
-const {
-    viewDepartments, viewRoles, 
-    viewEmployees,addDepartments,
-    addRole, addEmployee,
-    updateEmployee, startMenu } = require('./utils/actions');
+const { bootUp }  = require('./utils/actions');
 
 
 db.connect(err => {
-    if (err) throw err;
-    console.log('connected to employee database');
-  });
+  if (err) throw err;
+});
+
+
+// ascII art 
+console.log(chalklet.generate('Employee', colorOptions, fontOptions));
+console.log(chalklet.generate('Tracker', colorOptions2, fontOptions));
+
+bootUp();
 
 
 
-  startMenu();
 
-
-// module.exports = app;

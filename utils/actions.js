@@ -3,18 +3,44 @@ const mysql = require('mysql2');
 const db = require('../db/connection')
 const cTable = require('console.table');
 
+const chalklet = require('chalklet');
+//styling for chalklet
+const { colorOptions, fontOptions, colorOptions2 } = require('./consoleStyle');
+
+let roles = [];
+let departments = [];
+let employees = [];
+
+
+
 // Arrays of questions for inquirer
 const {
     startQuestions,
+    addDeptQuestion,
+    bootUpQ
 } = require('../lib/arrayPrompts');
 
 // ** -------------------------------------------------- Queries -------------------------------------------------- ** //
 
+// Boot up screen 
+function bootUp() {
+    inquirer.prompt(bootUpQ).then(results => {
+        if (results.bootUp) {
+            startMenu();
+        } else {
+            return;
+        }
+    })
+}
+
+function quitApp() {
+    console.log(chalklet.generate('Good', colorOptions, fontOptions));
+    console.log(chalklet.generate('Bye', colorOptions2, fontOptions));
+}
 // Go to start screen 
 function startMenu() {
     inquirer.prompt(startQuestions)
         .then(response => {
-            console.log(response.startQuestion);
             app(response.startQuestion);
         })
 };
@@ -95,17 +121,53 @@ function viewEmployees() {
 
 // add a Department
 function addDepartments() {
+    inquirer.prompt(addDeptQuestion).then(response => {
+        const newDepartment = response.addDepartment
+        const sql = `INSERT INTO department (name) VALUES ("${newDepartment}");`;
 
+        db.query(sql, (err, data) => {
+            if (err) {
+                throw (err);
+            }
+            for (let i = 0; i < data.length; i++) {
+                var departmentName = data[i].title
+                var departmentId = data[i].id
+                var department = { 'department': { depName: departmentName, depId: departmentId } };
+                departments.push(department);
+            }
+            console.log(departments)
+            viewDepartments();
+
+
+        })
+
+    })
 }
 
 // add a Role
 function addRole() {
 
+    inquirer.prompt(addRoleQuestions).then(response => {
+        const newRole = response.addRole;
+        const salary = response.salary;
+        const depId = response.depId;
+        const sql = `INSERT INTO role (name) VALUES ("${newRole}", "${salary}", "${depId}");`;
+        db.query(sql, (err, results) => {
+            if (err) {
+                throw (err);
+            }
+
+            viewRole();
+
+        })
+
+    })
+
 }
 
 // add an employee
 function addEmployee() {
-
+    console.log(departments);
 }
 
 // update an employee role
@@ -128,22 +190,27 @@ function app(switchValue) {
         case 'view all employees':
             viewEmployees();
             break;
-        case ('add a department'):
+        case 'add a department':
             addDepartments();
             break;
-        case ('add a role'):
+        case 'add a role':
             addRole();
             break;
-        case ('add an employee'):
+        case 'add an employee':
             addEmployee();
             break;
-        case ('update an employee role'):
+        case 'update an employee role':
             updateEmployee();
             break;
+        case 'quit':
+            quitApp();
+            break;
+
     }
 }
 
 module.exports = {
+    bootUp,
     viewDepartments,
     viewRoles,
     viewEmployees,
@@ -151,5 +218,8 @@ module.exports = {
     addRole,
     addEmployee,
     updateEmployee,
-    startMenu
+    startMenu,
+    roles,
+    departments,
+    employees
 }
