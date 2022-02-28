@@ -1,13 +1,11 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
 const db = require('../db/connection')
 const cTable = require('console.table');
 const chalklet = require('chalklet');
-//styling for chalklet
+// styling for chalklet
 const { colorOptions, fontOptions, colorOptions2 } = require('../lib/consoleStyle');
 
-
-// Arrays of questions for inquirer
+// arrays of questions for inquirer
 const {
     addEmployeeQuestions,
     startQuestions,
@@ -20,9 +18,7 @@ const {
     confirmSeeRolesQ
 } = require('../lib/arrayPrompts');
 
-// ** -------------------------------------------------- Queries -------------------------------------------------- ** //
-
-// Boot up screen 
+// boot up screen 
 function bootUp() {
     inquirer.prompt(bootUpQ).then(results => {
         if (results.bootUp) {
@@ -33,14 +29,48 @@ function bootUp() {
     })
 }
 
-
-// Go to start screen 
+// go to start screen 
 function startMenu() {
     inquirer.prompt(startQuestions)
         .then(response => {
             app(response.startQuestion);
         })
 };
+
+// the handler for main menu input;
+function app(switchValue) {
+    switch (switchValue) {
+        case 'startScreen':
+            startMenu();
+            break;
+        case 'View all departments':
+            viewDepartments()
+            break;
+        case 'View all roles':
+            viewRoles();
+            break;
+        case 'View all employees':
+            viewEmployees();
+            break;
+        case 'Add a department':
+            confirmSeeDep();
+            break;
+        case 'Add a role':
+            confirmSeeRoles();
+            break;
+        case 'Add an employee':
+            confirmSeeEmp(switchValue);
+            break;
+        case 'Update an employee role':
+            confirmSeeEmp(switchValue);
+            break;
+        case 'Quit':
+            quitApp();
+            break;
+    }
+}
+
+// ** -------------------------------------------------- Queries -------------------------------------------------- ** //
 
 // view all departments
 function viewDepartments() {
@@ -88,7 +118,6 @@ function viewRoles() {
         )
         startMenu();
     })
-
 }
 
 // view all employees
@@ -113,7 +142,6 @@ function viewEmployees() {
         )
         startMenu();
     })
-
 }
 
 // add a Department
@@ -130,7 +158,6 @@ function addDepartments() {
 
 
         })
-
     })
 }
 
@@ -147,7 +174,6 @@ function addRole() {
             }
             console.table(results);
             viewRoles();
-
         })
     })
 
@@ -171,10 +197,10 @@ function addEmployee() {
             }
             console.table(results);
             viewEmployees();
-
         })
     })
 }
+
 // update Employee
 function updateEmployee() {
     inquirer.prompt(updateEmployeeQuestions).then(response => {
@@ -189,9 +215,7 @@ function updateEmployee() {
             console.table(results);
             viewEmployees();
         })
-
     })
-
 }
 
 // see an employee list for reference
@@ -214,12 +238,10 @@ function confirmSeeEmp(switchValue) {
 =======================================================================
                     `
                 )
-
             })
             addOrUpdate(switchValue);
         } else addOrUpdate(switchValue);
     })
-
 }
 
 // see if they were updating an employee or adding one
@@ -260,6 +282,7 @@ function confirmSeeDep() {
         } else addDepartments();
     })
 }
+
 // if they wanted reference for roles
 function confirmSeeRoles() {
     inquirer.prompt(confirmSeeRolesQ).then(response => {
@@ -285,48 +308,12 @@ function confirmSeeRoles() {
             addRole();
         } else addRole();
     })
-
 }
 
 // If user wants to quit
 function quitApp() {
     console.log(chalklet.generate('Good', colorOptions, fontOptions));
     console.log(chalklet.generate('Bye', colorOptions2, fontOptions));
-}
-
-
-//  the handler for main menu input;
-function app(switchValue) {
-    switch (switchValue) {
-        case 'startScreen':
-            startMenu();
-            break;
-        case 'View all departments':
-            viewDepartments()
-            break;
-        case 'View all roles':
-            viewRoles();
-            break;
-        case 'View all employees':
-            viewEmployees();
-            break;
-        case 'Add a department':
-            confirmSeeDep();
-            break;
-        case 'Add a role':
-            confirmSeeRoles();
-            break;
-        case 'Add an employee':
-            confirmSeeEmp(switchValue);
-            break;
-        case 'Update an employee role':
-            confirmSeeEmp(switchValue);
-            break;
-        case 'Quit':
-            quitApp();
-            break;
-
-    }
 }
 
 module.exports = {
