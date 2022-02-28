@@ -9,13 +9,15 @@ const { colorOptions, fontOptions, colorOptions2 } = require('./consoleStyle');
 
 // Arrays of questions for inquirer
 const {
+    addEmployeeQuestions,
     startQuestions,
     addDeptQuestion,
     bootUpQ,
     addRoleQuestions,
-    addEmployeeQuestions,
-    updateEmployeeQuestionsFirst,
-    updateEmployeeQuestionsSecond
+    confirmSeeEmpQ,
+    updateEmployeeQuestions,
+    confirmSeeDepQ,
+    confirmSeeRolesQ
 } = require('../lib/arrayPrompts');
 
 // ** -------------------------------------------------- Queries -------------------------------------------------- ** //
@@ -173,8 +175,9 @@ function addEmployee() {
         })
     })
 }
+// update Employee
 function updateEmployee() {
-    inquirer.prompt(updateEmployeeQuestionsSecond).then(response => {
+    inquirer.prompt(updateEmployeeQuestions).then(response => {
         var sql = `UPDATE employee SET role_id = ? 
         WHERE id = ?`;
 
@@ -190,9 +193,10 @@ function updateEmployee() {
     })
 
 }
+
 // see an employee list for reference
-function confirmSeeEmp() {
-    inquirer.prompt(updateEmployeeQuestionsFirst).then(response => {
+function confirmSeeEmp(switchValue) {
+    inquirer.prompt(confirmSeeEmpQ).then(response => {
         if (response.confirmSeeList) {
             const sql = `SELECT * FROM employee`;
 
@@ -210,10 +214,76 @@ function confirmSeeEmp() {
 =======================================================================
                     `
                 )
-                console.log('What is the ID of the employee you would like to update?')
+
             })
-            updateEmployee();
-        } else updateEmployee();
+            addOrUpdate(switchValue);
+        } else addOrUpdate(switchValue);
+    })
+
+}
+
+// see if they were updating an employee or adding one
+function addOrUpdate(switchValue) {
+    if (switchValue == 'Add an employee') {
+        console.log('What is the first name of the Employee?');
+        addEmployee();
+    }
+    if (switchValue == 'Update an employee role') {
+        console.log('What is the ID of the employee you would like to update?')
+        updateEmployee();
+    }
+}
+
+// if they wanted reference for departments
+function confirmSeeDep() {
+    inquirer.prompt(confirmSeeDepQ).then(response => {
+        if (response.confirmSeeList) {
+            const sql = `SELECT * FROM department`;
+
+            db.query(sql, (err, results) => {
+                console.log(
+                    `
+=======================================================================
+                            DEPARTMENTS
+======================================================================= 
+                    `
+                )
+                console.table(results);
+                console.log(
+                    `
+=======================================================================
+                    `
+                )
+                console.log('What is the name of the department?')
+            })
+            addDepartments();
+        } else addDepartments();
+    })
+}
+// if they wanted reference for roles
+function confirmSeeRoles() {
+    inquirer.prompt(confirmSeeRolesQ).then(response => {
+        if (response.confirmSeeList) {
+            const sql = `SELECT * FROM role`;
+
+            db.query(sql, (err, results) => {
+                console.log(
+                    `
+=======================================================================
+                            ROLES
+======================================================================= 
+                    `
+                )
+                console.table(results);
+                console.log(
+                    `
+=======================================================================
+                    `
+                )
+                console.log('What is the name of the role?')
+            })
+            addRole();
+        } else addRole();
     })
 
 }
@@ -241,16 +311,16 @@ function app(switchValue) {
             viewEmployees();
             break;
         case 'Add a department':
-            addDepartments();
+            confirmSeeDep();
             break;
         case 'Add a role':
-            addRole();
+            confirmSeeRoles();
             break;
         case 'Add an employee':
-            addEmployee();
+            confirmSeeEmp(switchValue);
             break;
         case 'Update an employee role':
-            confirmSeeEmp();
+            confirmSeeEmp(switchValue);
             break;
         case 'Quit':
             quitApp();
