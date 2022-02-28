@@ -1,7 +1,7 @@
 # track-my-employees
           
   ## Description
-  This is a command line application that allows you to create and update employees in your database. You can also add new roles with corresponding salaries and ids, as well as new departments for those roles. This app is ran using Node.js and has a handful of dependencies that it requires, most notably the inquirer Node package as well as MySql2. Inquirer is used to ask the user prompts and questions related to the changes to their database. MySql2 is what it uses to create and maintain the database. This app is great for handling your employee database structure and allows you to view your current staff in an effective and concise fashion.
+  This is a command line application that allows you to create and update employees in your database. You can also add new roles with corresponding salaries and ids, as well as new departments for those roles. This app is ran using Node.js and has a handful of dependencies that it requires, most notably the inquirer Node package as well as MySql2. Inquirer is used to prompt the user questions related to changing their database and MySql2 is what it actually uses to create and maintain the database. This app is not only great for handling your employee database structure but it allows you to view your current staff in an effecient manner.
   
   ## Table of Contents
   * [Installation](#installation)
@@ -12,14 +12,14 @@
   * [Email](#email)
   
   ## Installation 
-  To install my employee tracker, simply clone this repository into your desired directory and run an `npm install` or `npm i` within the terminal. This will ensure that all of the required dependencies get installed into your `package.json` file. I will provide a screenshot of all of the dependencies you will require to ensure you have the correct prerequisites. 
+  To install track-my-employees, simply clone this repository into your desired directory and run an `npm install` or `npm i` within the terminal. This will ensure that all of the required dependencies get installed into your `package.json` file. I will provide a screenshot of all of the dependencies you will require to ensure you have the correct prerequisites. 
 
  ![p.json](./public//img/package_json.png)
 
- Once you have ensured that you have the correct files and they are downloaded you can go ahead and start the application!
+ Once you have ensured that you have the correct files and they are downloaded, you can go ahead and start the application!
   
   ## Usage 
-  To start the application, run `node server` or `node server.js` in your command-line. It will then connect you to your database and begin asking you questions. It will prompt you with a large `Employee Tracker` message and ask if you would like to begin, you can either type `Y` or simply click enter. 
+  To start the application, run `node server` or `node server.js` in your command-line. It will then connect you to your database and begin asking you questions. It will prompt you with a large `Employee Tracker` message and ask you if you'd like to begin, you can either type `Y` or simply click enter. 
     On all the confirm prompts it will have one of the options `Y/n` (Yes or No) as a capital letter. This means that one is the default and simply hitting enter without typing will select that option.
 
 
