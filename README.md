@@ -52,11 +52,7 @@ If you want to manually change the default database entries, you can populate it
 
   ## License
   ### Badges
-  ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
-  ### Links to licenses
-  https://opensource.org/licenses/MIT
-
-
+  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   ## Questions
   If you have any questions, feel free to reach out and contact me via email.
   ### Email
