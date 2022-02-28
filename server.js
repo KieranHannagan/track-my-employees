@@ -6,7 +6,7 @@ const { colorOptions, fontOptions, colorOptions2 } = require('./lib/consoleStyle
 
 
 // helper functions for prompts
-const { bootUp }  = require('./utils/index');;;
+const { bootUp } = require('./utils/index');
 
 
 
@@ -15,10 +15,11 @@ db.connect(err => {
 });
 
 
-// ascII art 
+// ascII art for greeting message
 console.log(chalklet.generate('Employee', colorOptions, fontOptions));
 console.log(chalklet.generate('Tracker', colorOptions2, fontOptions));
 
+// start inquirer chain
 bootUp();
 
 
