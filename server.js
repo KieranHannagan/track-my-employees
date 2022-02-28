@@ -2,11 +2,11 @@ const mysql = require('mysql2');
 const db = require('./db/connection');
 const chalklet = require('chalklet');
 //styling for chalklet
-const { colorOptions, fontOptions, colorOptions2 } = require('./utils/consoleStyle');
+const { colorOptions, fontOptions, colorOptions2 } = require('./lib/consoleStyle');
 
 
 // helper functions for prompts
-const { bootUp }  = require('./utils/actions');;;
+const { bootUp }  = require('./utils/index');;;
 
 
 

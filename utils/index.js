@@ -4,7 +4,7 @@ const db = require('../db/connection')
 const cTable = require('console.table');
 const chalklet = require('chalklet');
 //styling for chalklet
-const { colorOptions, fontOptions, colorOptions2 } = require('./consoleStyle');
+const { colorOptions, fontOptions, colorOptions2 } = require('../lib/consoleStyle');
 
 
 // Arrays of questions for inquirer
