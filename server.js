@@ -9,7 +9,7 @@ const { colorOptions, fontOptions, colorOptions2 } = require('./lib/consoleStyle
 const { bootUp } = require('./utils/index');
 
 
-
+// connecting to the database
 db.connect(err => {
   if (err) throw err;
 });
